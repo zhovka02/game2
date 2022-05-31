@@ -36,15 +36,15 @@ public class UITests {
                 "|       Your choice → | Spock | Lizard | Scissors | Paper | Rock |\n" +
                 "| ↓ Opponent's choice |       |        |          |       |      |\n" +
                 "+---------------------+-------+--------+----------+-------+------+\n" +
-                "| Spock               | draw  | win    | lose     | win   | lose |\n" +
+                "| Spock               | tie   | win    | lose     | win   | lose |\n" +
                 "+---------------------+-------+--------+----------+-------+------+\n" +
-                "| Lizard              | lose  | draw   | win      | lose  | win  |\n" +
+                "| Lizard              | lose  | tie    | win      | lose  | win  |\n" +
                 "+---------------------+-------+--------+----------+-------+------+\n" +
-                "| Scissors            | win   | lose   | draw     | lose  | win  |\n" +
+                "| Scissors            | win   | lose   | tie      | lose  | win  |\n" +
                 "+---------------------+-------+--------+----------+-------+------+\n" +
-                "| Paper               | lose  | win    | win      | draw  | lose |\n" +
+                "| Paper               | lose  | win    | win      | tie   | lose |\n" +
                 "+---------------------+-------+--------+----------+-------+------+\n" +
-                "| Rock                | win   | lose   | lose     | win   | draw |\n" +
+                "| Rock                | win   | lose   | lose     | win   | tie  |\n" +
                 "+---------------------+-------+--------+----------+-------+------+\n";
         Assert.assertEquals(standardOutput, mustBeOut);
     }

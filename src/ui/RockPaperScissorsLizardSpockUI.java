@@ -104,19 +104,29 @@ public class RockPaperScissorsLizardSpockUI {
                 String command = cmdLineStringParsed[0];
                 String[] parameters = Arrays.copyOfRange(cmdLineStringParsed, 1, cmdLineStringParsed.length);
                 switch (command) {
-                    case SCORE -> this.doScore();
-                    case CONNECT -> this.doConnect(parameters);
-                    case OPEN -> this.doOpen();
-                    case CHOOSE -> this.doChoose(parameters);
-                    case RULES -> this.doRules();
-                    case EXIT -> {
+                    case SCORE:
+                        this.doScore();
+                        break;
+                    case CONNECT:
+                        this.doConnect(parameters);
+                        break;
+                    case OPEN:
+                        this.doOpen();
+                        break;
+                    case CHOOSE:
+                        this.doChoose(parameters);
+                        break;
+                    case RULES:
+                        this.doRules();
+                        break;
+                    case EXIT:
                         again = false;
                         this.doExit();
-                    }
-                    default -> {
+                        break;
+                    default:
                         this.outStream.println("unknown command: " + cmdLineString);
                         this.printUsage();
-                    }
+                        break;
                 }
             } catch (IOException ex) {
                 this.outStream.println("cannot read from input stream");
@@ -137,15 +147,15 @@ public class RockPaperScissorsLizardSpockUI {
         b.append("|       Your choice → | Spock | Lizard | Scissors | Paper | Rock |\n");
         b.append("| ↓ Opponent's choice |       |        |          |       |      |\n");
         b.append("+---------------------+-------+--------+----------+-------+------+\n");
-        b.append("| Spock               | draw  | win    | lose     | win   | lose |\n");
+        b.append("| Spock               | tie   | win    | lose     | win   | lose |\n");
         b.append("+---------------------+-------+--------+----------+-------+------+\n");
-        b.append("| Lizard              | lose  | draw   | win      | lose  | win  |\n");
+        b.append("| Lizard              | lose  | tie    | win      | lose  | win  |\n");
         b.append("+---------------------+-------+--------+----------+-------+------+\n");
-        b.append("| Scissors            | win   | lose   | draw     | lose  | win  |\n");
+        b.append("| Scissors            | win   | lose   | tie      | lose  | win  |\n");
         b.append("+---------------------+-------+--------+----------+-------+------+\n");
-        b.append("| Paper               | lose  | win    | win      | draw  | lose |\n");
+        b.append("| Paper               | lose  | win    | win      | tie   | lose |\n");
         b.append("+---------------------+-------+--------+----------+-------+------+\n");
-        b.append("| Rock                | win   | lose   | lose     | win   | draw |\n");
+        b.append("| Rock                | win   | lose   | lose     | win   | tie  |\n");
         b.append("+---------------------+-------+--------+----------+-------+------+");
 
         this.outStream.println(b);
@@ -164,10 +174,10 @@ public class RockPaperScissorsLizardSpockUI {
             }
             this.outStream.println(opponent.getPlayerName() + " chose " + opponent.getChoice());
             Result result = gameEngine.judge();
-            switch (result){
+            switch (result) {
                 case WIN -> this.outStream.println("You win");
-                case LOSE -> this.outStream.println(opponent.getPlayerName() + " win");
-                case DRAW -> this.outStream.println(Result.DRAW.getResult());
+                case LOSE -> this.outStream.println(opponent.getPlayerName() + " wins");
+                case TIE -> this.outStream.println(Result.TIE.getResult());
             }
 
         }

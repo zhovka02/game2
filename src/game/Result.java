@@ -3,7 +3,7 @@ package game;
 public enum Result {
     WIN("wins"),
     LOSE("loses"),
-    DRAW("It's a tie");
+    TIE("It's a tie");
 
     private final String result;
 

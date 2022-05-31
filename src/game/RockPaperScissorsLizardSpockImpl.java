@@ -29,7 +29,7 @@ public class RockPaperScissorsLizardSpockImpl implements RoPaScLiSpAPI, Score {
         stringToOutput.append(this.playerTwo.getScore());
         stringToOutput.append("\n");
         if (this.playerOne.getScore() == this.playerTwo.getScore())
-            stringToOutput.append(Result.DRAW.getResult());
+            stringToOutput.append(Result.TIE.getResult());
         else if (this.playerOne.getScore() > this.playerTwo.getScore()){
             stringToOutput.append(playerOne.getPlayerName());
             stringToOutput.append(" ");
@@ -83,7 +83,7 @@ public class RockPaperScissorsLizardSpockImpl implements RoPaScLiSpAPI, Score {
                     || (playerOne.getChoice().ordinal() == 2 && playerTwo.getChoice().ordinal() == 2)
                     || (playerOne.getChoice().ordinal() == 3 && playerTwo.getChoice().ordinal() == 3)
                     || (playerOne.getChoice().ordinal() == 4 && playerTwo.getChoice().ordinal() == 4)) {
-                result = Result.DRAW;
+                result = Result.TIE;
             } else if ((playerOne.getChoice().ordinal() == 0 && (playerTwo.getChoice().ordinal() == 1 || playerTwo.getChoice().ordinal() == 3))
                     || (playerOne.getChoice().ordinal() == 1 && (playerTwo.getChoice().ordinal() == 2 || playerTwo.getChoice().ordinal() == 3))
                     || (playerOne.getChoice().ordinal() == 2 && (playerTwo.getChoice().ordinal() == 0 || playerTwo.getChoice().ordinal() == 4))
