@@ -1,6 +1,6 @@
 package player;
 
-public class PlayerImpl implements Player{
+public class PlayerImpl implements Player {
 
     private int score;
     private Status currentStatus;
@@ -8,12 +8,13 @@ public class PlayerImpl implements Player{
     private Choices playerChoice;
 
 
-    public PlayerImpl(String playerName){
+    public PlayerImpl(String playerName) {
         this.playerName = playerName;
         this.score = 0;
         this.currentStatus = Status.CHOICE_NOT_MADE;
         this.playerChoice = null;
     }
+
     @Override
     public int getScore() {
         return this.score;
@@ -31,16 +32,10 @@ public class PlayerImpl implements Player{
     }
 
     @Override
-    public void setPLayerName(String name) {
-        this.playerName = name;
-    }
-
-    @Override
     public void updateStatus() {
         if (this.currentStatus == Status.CHOICE_NOT_MADE)
             this.currentStatus = Status.CHOICE_MADE;
-        else
-        {
+        else {
             this.currentStatus = Status.CHOICE_NOT_MADE;
             this.playerChoice = null;
         }

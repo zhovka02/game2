@@ -12,13 +12,14 @@ public class Computer implements Player {
     private String playerName;
     private Choices playerChoice;
 
-    public Computer(){
+    public Computer() {
         this.playerName = "Big Brother";
         this.playerChoice = null;
         this.currentStatus = Status.CHOICE_NOT_MADE;
         this.score = 0;
 
     }
+
     @Override
     public int getScore() {
         return this.score;
@@ -35,16 +36,10 @@ public class Computer implements Player {
     }
 
     @Override
-    public void setPLayerName(String name) {
-        this.playerName = name;
-    }
-
-    @Override
     public void updateStatus() {
         if (this.currentStatus == Status.CHOICE_NOT_MADE)
             this.currentStatus = Status.CHOICE_MADE;
-        else
-        {
+        else {
             this.currentStatus = Status.CHOICE_NOT_MADE;
             this.playerChoice = null;
         }

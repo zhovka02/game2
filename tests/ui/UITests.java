@@ -22,6 +22,7 @@ public class UITests {
             rules.. print rules
             exit.. exit
             """;
+
     @Test
     public void testRules() {
         ByteArrayOutputStream testOut = new ByteArrayOutputStream();
@@ -31,7 +32,7 @@ public class UITests {
         System.setIn(in);
         RockPaperScissorsLizardSpockUI.main(new String[]{"Test"});
         String standardOutput = testOut.toString();
-        final String mustBeOut = entryMessage+
+        final String mustBeOut = entryMessage +
                 "+---------------------+-------+--------+----------+-------+------+\n" +
                 "|       Your choice → | Spock | Lizard | Scissors | Paper | Rock |\n" +
                 "| ↓ Opponent's choice |       |        |          |       |      |\n" +
@@ -50,7 +51,7 @@ public class UITests {
     }
 
     @Test
-    public void testChoose1()  {
+    public void testChoose1() {
         ByteArrayOutputStream testOut = new ByteArrayOutputStream();
         System.setOut(new PrintStream(testOut));
         String input = "choose kek";
@@ -63,8 +64,9 @@ public class UITests {
                 "please type in rock or scissors or paper or lizard or spock\n";
         Assert.assertEquals(mustBeOut, standardOutput);
     }
+
     @Test
-    public void testChoose2()  {
+    public void testChoose2() {
         ByteArrayOutputStream testOut = new ByteArrayOutputStream();
         System.setOut(new PrintStream(testOut));
         String input = "choose";
@@ -76,8 +78,9 @@ public class UITests {
                 "don't have any choice :(\n";
         Assert.assertEquals(mustBeOut, standardOutput);
     }
+
     @Test
-    public void invalidInput(){
+    public void invalidInput() {
         ByteArrayOutputStream testOut = new ByteArrayOutputStream();
         System.setOut(new PrintStream(testOut));
         String input = "eat";

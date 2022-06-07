@@ -24,7 +24,6 @@ public class RockPaperScissorsLizardSpockUI {
     private static final String RULES = "rules";
     private final PrintStream outStream;
     private final BufferedReader inBufferedReader;
-    private final String playerName;
     private final Player player;
     private RockPaperScissorsLizardSpockImpl gameEngine;
     private final Player opponent;
@@ -48,7 +47,6 @@ public class RockPaperScissorsLizardSpockUI {
 
     public RockPaperScissorsLizardSpockUI(String playerName, PrintStream os, InputStream is) {
 
-        this.playerName = playerName;
         this.player = new PlayerImpl(playerName);
         this.outStream = os;
         this.inBufferedReader = new BufferedReader(new InputStreamReader(is));
@@ -104,29 +102,19 @@ public class RockPaperScissorsLizardSpockUI {
                 String command = cmdLineStringParsed[0];
                 String[] parameters = Arrays.copyOfRange(cmdLineStringParsed, 1, cmdLineStringParsed.length);
                 switch (command) {
-                    case SCORE:
-                        this.doScore();
-                        break;
-                    case CONNECT:
-                        this.doConnect(parameters);
-                        break;
-                    case OPEN:
-                        this.doOpen();
-                        break;
-                    case CHOOSE:
-                        this.doChoose(parameters);
-                        break;
-                    case RULES:
-                        this.doRules();
-                        break;
-                    case EXIT:
+                    case SCORE -> this.doScore();
+                    case CONNECT -> this.doConnect(parameters);
+                    case OPEN -> this.doOpen();
+                    case CHOOSE -> this.doChoose(parameters);
+                    case RULES -> this.doRules();
+                    case EXIT -> {
                         again = false;
                         this.doExit();
-                        break;
-                    default:
+                    }
+                    default -> {
                         this.outStream.println("unknown command: " + cmdLineString);
                         this.printUsage();
-                        break;
+                    }
                 }
             } catch (IOException ex) {
                 this.outStream.println("cannot read from input stream");
@@ -170,7 +158,7 @@ public class RockPaperScissorsLizardSpockUI {
                 this.outStream.println("waiting to the opponent");
             while (this.gameEngine.getCurrentStatus() != GameStatus.READY_TO_JUDGE) {
                 Choices[] choices = {Choices.SPOCK, Choices.ROCK, Choices.PAPER, Choices.SCISSORS, Choices.LIZARD};
-                opponent.setChoice(choices[(int)(Math.random() * 5 + 1) - 1]);
+                opponent.setChoice(choices[(int) (Math.random() * 5 + 1) - 1]);
             }
             this.outStream.println(opponent.getPlayerName() + " chose " + opponent.getChoice());
             Result result = gameEngine.judge();
@@ -180,21 +168,17 @@ public class RockPaperScissorsLizardSpockUI {
                 case TIE -> this.outStream.println(Result.TIE.getResult());
             }
 
-        }
-        catch (IllegalArgumentException ex){
+        } catch (IllegalArgumentException ex) {
             this.outStream.println(ex.getLocalizedMessage());
             this.outStream.println("please type in rock or scissors or paper or lizard or spock");
-        }
-        catch (IndexOutOfBoundsException ex){
+        } catch (IndexOutOfBoundsException ex) {
             this.outStream.println("don't have any choice :(");
-        } catch (GameStatusException e) {
-            e.printStackTrace();
-        } catch (PlayerStatusException e) {
+        } catch (GameStatusException | PlayerStatusException e) {
             e.printStackTrace();
         }
     }
 
-    private Choices setChoose(String userChoice) throws IllegalArgumentException{
+    private Choices setChoose(String userChoice) throws IllegalArgumentException {
         return switch (userChoice) {
             case "rock" -> Choices.ROCK;
             case "scissors" -> Choices.SCISSORS;

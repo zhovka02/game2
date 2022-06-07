@@ -11,7 +11,7 @@ public class RockPaperScissorsLizardSpockImpl implements RoPaScLiSpAPI, Score {
     Player playerOne, playerTwo;
 
 
-    public RockPaperScissorsLizardSpockImpl(Player playerOne, Player playerTwo){
+    public RockPaperScissorsLizardSpockImpl(Player playerOne, Player playerTwo) {
         this.playerOne = playerOne;
         this.playerTwo = playerTwo;
     }
@@ -30,7 +30,7 @@ public class RockPaperScissorsLizardSpockImpl implements RoPaScLiSpAPI, Score {
         stringToOutput.append("\n");
         if (this.playerOne.getScore() == this.playerTwo.getScore())
             stringToOutput.append(Result.TIE.getResult());
-        else if (this.playerOne.getScore() > this.playerTwo.getScore()){
+        else if (this.playerOne.getScore() > this.playerTwo.getScore()) {
             stringToOutput.append(playerOne.getPlayerName());
             stringToOutput.append(" ");
             stringToOutput.append(Result.WIN.getResult());
@@ -38,9 +38,7 @@ public class RockPaperScissorsLizardSpockImpl implements RoPaScLiSpAPI, Score {
             stringToOutput.append(playerTwo.getPlayerName());
             stringToOutput.append(" ");
             stringToOutput.append(Result.LOSE.getResult());
-        }
-        else
-        {
+        } else {
             stringToOutput.append(playerTwo.getPlayerName());
             stringToOutput.append(" ");
             stringToOutput.append(Result.WIN.getResult());
@@ -52,28 +50,25 @@ public class RockPaperScissorsLizardSpockImpl implements RoPaScLiSpAPI, Score {
         os.println(stringToOutput);
     }
 
-    private boolean isNotReadyToJudge(){
+    private boolean isNotReadyToJudge() {
         return this.getCurrentStatus() != GameStatus.READY_TO_JUDGE;
     }
 
     public GameStatus getCurrentStatus() {
-        if (playerOne.getStatus() == Status.CHOICE_MADE && playerTwo.getStatus() == Status.CHOICE_MADE){
+        if (playerOne.getStatus() == Status.CHOICE_MADE && playerTwo.getStatus() == Status.CHOICE_MADE) {
             return GameStatus.READY_TO_JUDGE;
-        }
-        else if (playerOne.getStatus() == Status.CHOICE_MADE && playerTwo.getStatus() == Status.CHOICE_NOT_MADE) {
+        } else if (playerOne.getStatus() == Status.CHOICE_MADE && playerTwo.getStatus() == Status.CHOICE_NOT_MADE) {
             return GameStatus.ONLY_ONE_CHOICE;
-        }
-        else if (playerOne.getStatus() == Status.CHOICE_NOT_MADE && playerTwo.getStatus() == Status.CHOICE_MADE){
+        } else if (playerOne.getStatus() == Status.CHOICE_NOT_MADE && playerTwo.getStatus() == Status.CHOICE_MADE) {
             return GameStatus.ONLY_ONE_CHOICE;
-        }
-        else {
+        } else {
             return GameStatus.NO_CHOICES;
         }
     }
 
     @Override
     public Result judge() throws GameStatusException {
-        if (this.isNotReadyToJudge()){
+        if (this.isNotReadyToJudge()) {
             throw new GameStatusException(this.getCurrentStatus());
         }
         Result result;
@@ -102,7 +97,7 @@ public class RockPaperScissorsLizardSpockImpl implements RoPaScLiSpAPI, Score {
         return result;
     }
 
-    private void resetStatus() throws GameStatusException{
+    private void resetStatus() throws GameStatusException {
         if (isNotReadyToJudge())
             throw new GameStatusException(this.getCurrentStatus());
         playerOne.updateStatus();

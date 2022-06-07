@@ -11,9 +11,18 @@ import java.io.PrintStream;
 
 public class APITests {
 
-    private final Player playerOne = new PlayerImpl("Alice");
-    private final Player playerTwo = new PlayerImpl("Bob");
+    // set up names for two players
+    private final String ALICE = "Alice";
+    private final String BOB = "Bob";
+
+    // set up two players
+    private final Player playerOne = new PlayerImpl(ALICE);
+    private final Player playerTwo = new PlayerImpl(BOB);
+
+    // set up gameEngine without print functions
     private final RoPaScLiSpAPI gameEngine = new RockPaperScissorsLizardSpockImpl(playerOne, playerTwo);
+
+    // set up gameEngine with print function
     private final RockPaperScissorsLizardSpockImpl gameEngineWithPrinter = new RockPaperScissorsLizardSpockImpl(playerOne, playerTwo);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

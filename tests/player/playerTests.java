@@ -15,6 +15,7 @@ public class playerTests {
         // try to access Alice's choice
         Assert.assertEquals(CHOICE, player.getChoice());
     }
+
     @Test
     public void playerTest2() {
         // Alice doesn't make any choice
@@ -22,8 +23,7 @@ public class playerTests {
         try {
             player.getChoice();
             Assert.fail();
-        }
-        catch (PlayerStatusException e) {
+        } catch (PlayerStatusException e) {
             // should be here
         }
     }

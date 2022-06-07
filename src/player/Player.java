@@ -2,27 +2,23 @@ package player;
 
 public interface Player {
     /**
-     * Gets the current player.Player's score
-     * @return current score of player.Player
+     * Gets the current Player's score
+     *
+     * @return current score of Player
      */
     int getScore();
 
     /**
-     * Increments the player.Player's score
+     * Increments the Player's score
      */
     void incScore();
 
     /**
-     * Gets the name of player.Player
-     * @return name of player.Player
+     * Gets the name of Player
+     *
+     * @return name of Player
      */
     String getPlayerName();
-
-    /**
-     * Updates the current Player's name
-     * @param name - player.Player's name to update the current one
-     */
-    void setPLayerName(String name);
 
     /**
      * Updates the current Player's status
@@ -32,20 +28,23 @@ public interface Player {
 
     /**
      * Gets the current status of player
-     * @return enum Status - player's status at the moment
+     *
+     * @return enum {@link Status} - player's status at the moment
      */
     Status getStatus();
 
     /**
      * Updates the current Player's choice
      *
+     * @param choice - instance of {@link Choices} to set
      */
     void setChoice(Choices choice);
 
     /**
      * Gets the current choice of player
-     * @throws PlayerStatusException If the player has not yet made a choice
+     *
      * @return enum Choices - player's choice at the moment
+     * @throws PlayerStatusException If the player has not yet made a choice
      */
     Choices getChoice() throws PlayerStatusException;
 
