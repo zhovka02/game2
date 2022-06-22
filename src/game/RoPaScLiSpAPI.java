@@ -2,6 +2,8 @@ package game;
 
 public interface RoPaScLiSpAPI {
 
+    int DEFAULT_PORT = 1408;
+
     /**
      * Determines the result of the first player in the round.
      * <p>

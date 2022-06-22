@@ -69,7 +69,7 @@ public class RockPaperScissorsLizardSpockImpl implements RoPaScLiSpAPI, Score {
     @Override
     public Result judge() throws GameStatusException {
         if (this.isNotReadyToJudge()) {
-            throw new GameStatusException(this.getCurrentStatus());
+            throw new GameStatusException(this.getCurrentStatus().getStatus());
         }
         Result result;
         try {
@@ -91,7 +91,7 @@ public class RockPaperScissorsLizardSpockImpl implements RoPaScLiSpAPI, Score {
                 result = Result.LOSE;
             }
         } catch (PlayerStatusException e) {
-            throw new GameStatusException(this.getCurrentStatus());
+            throw new GameStatusException(this.getCurrentStatus().getStatus());
         }
         resetStatus();
         return result;
@@ -99,7 +99,7 @@ public class RockPaperScissorsLizardSpockImpl implements RoPaScLiSpAPI, Score {
 
     private void resetStatus() throws GameStatusException {
         if (isNotReadyToJudge())
-            throw new GameStatusException(this.getCurrentStatus());
+            throw new GameStatusException(this.getCurrentStatus().getStatus());
         playerOne.updateStatus();
         playerTwo.updateStatus();
     }

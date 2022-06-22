@@ -1,14 +1,14 @@
 package ui;
 
 import computer.Computer;
-import game.GameStatus;
 import game.GameStatusException;
-import game.Result;
+import game.RoPaScLiSpAPI;
 import game.RockPaperScissorsLizardSpockImpl;
+import network.RockPaperScissorsLizardSpockProtocolEngine;
+import network.TCPStream;
 import player.Choices;
 import player.Player;
 import player.PlayerImpl;
-import player.PlayerStatusException;
 
 import java.io.*;
 import java.util.Arrays;
@@ -26,7 +26,9 @@ public class RockPaperScissorsLizardSpockUI {
     private final BufferedReader inBufferedReader;
     private final Player player;
     private RockPaperScissorsLizardSpockImpl gameEngine;
-    private final Player opponent;
+    private Player opponent;
+    private TCPStream tcpStream;
+    private RockPaperScissorsLizardSpockProtocolEngine protocolEngine;
 
     public static void main(String[] args) {
         System.out.println("Welcome to Rock-Paper-Scissors-Lizard-Spock version 0.01a");
@@ -116,16 +118,28 @@ public class RockPaperScissorsLizardSpockUI {
                         this.printUsage();
                     }
                 }
-            } catch (IOException ex) {
-                this.outStream.println("cannot read from input stream");
+            } catch (IOException | GameStatusException ex) {
+                this.outStream.println("cannot connect to opponent - probably, opponent is not available");
                 this.doExit();
             } catch (RuntimeException ex) {
                 this.outStream.println("runtime problems: " + ex.getLocalizedMessage());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
 
     private void doExit() {
+        try {
+            protocolEngine.kill();
+        } catch (IOException e) {
+            // ignore
+        }
+        this.close();
+    }
+
+    private void close() {
+        tcpStream.kill();
     }
 
     private void doRules() {
@@ -149,32 +163,28 @@ public class RockPaperScissorsLizardSpockUI {
         this.outStream.println(b);
     }
 
-    private void doChoose(String[] parameters) {
-        try {
-            Choices userChoice = setChoose(parameters[0]);
-            this.player.setChoice(userChoice);
-            this.outStream.println("You have chosen " + userChoice.getValue());
-            if (this.gameEngine.getCurrentStatus() != GameStatus.READY_TO_JUDGE)
-                this.outStream.println("waiting to the opponent");
-            while (this.gameEngine.getCurrentStatus() != GameStatus.READY_TO_JUDGE) {
-                Choices[] choices = {Choices.SPOCK, Choices.ROCK, Choices.PAPER, Choices.SCISSORS, Choices.LIZARD};
-                opponent.setChoice(choices[(int) (Math.random() * 5 + 1) - 1]);
-            }
-            this.outStream.println(opponent.getPlayerName() + " chose " + opponent.getChoice());
-            Result result = gameEngine.judge();
-            switch (result) {
-                case WIN -> this.outStream.println("You win");
-                case LOSE -> this.outStream.println(opponent.getPlayerName() + " wins");
-                case TIE -> this.outStream.println(Result.TIE.getResult());
+    private void doChoose(String[] parameters) throws GameStatusException, IOException {
+        if (this.checkConnection()) {
+            try {
+                Choices userChoice = setChoose(parameters[0]);
+                this.player.setChoice(userChoice);
+                this.protocolEngine.sendToOpponent(userChoice);
+                System.out.println("you have chosen " + userChoice.getValue() + ", waiting for an answer from your opponent");
+                Choices opponentChoice = this.protocolEngine.waitAndGetOpponentChoice();
+                System.out.println("the opponent chose the " + opponentChoice.getValue());
+                this.opponent.setChoice(opponentChoice);
+                this.gameEngine.judge();
+                this.gameEngine.printScore(outStream);
+            } catch (IllegalArgumentException ex) {
+                this.outStream.println(ex.getLocalizedMessage());
+                this.outStream.println("please type in rock or scissors or paper or lizard or spock");
+            } catch (IndexOutOfBoundsException ex) {
+                this.outStream.println("don't have any choice :(");
             }
 
-        } catch (IllegalArgumentException ex) {
-            this.outStream.println(ex.getLocalizedMessage());
-            this.outStream.println("please type in rock or scissors or paper or lizard or spock");
-        } catch (IndexOutOfBoundsException ex) {
-            this.outStream.println("don't have any choice :(");
-        } catch (GameStatusException | PlayerStatusException e) {
-            e.printStackTrace();
+
+        } else {
+            System.out.println("no connection to the opponent");
         }
     }
 
@@ -189,22 +199,44 @@ public class RockPaperScissorsLizardSpockUI {
         };
     }
 
-    private void doOpen() {
+    private void doOpen() throws IOException {
+        this.tcpStream = new TCPStream(RoPaScLiSpAPI.DEFAULT_PORT, true, this.player.getPlayerName());
+        this.tcpStream.start();
+        this.handshake();
+
 
     }
 
-    private void doConnect(String[] parameters) {
-
+    private void handshake() throws IOException {
+        System.out.println("wait for opponent");
+        this.tcpStream.waitForConnection();
+        this.protocolEngine = new RockPaperScissorsLizardSpockProtocolEngine(this.tcpStream.getInputStream(), this.tcpStream.getOutputStream());
+        this.opponent = new PlayerImpl(this.protocolEngine.handshake(player.getPlayerName()));
         this.gameEngine = new RockPaperScissorsLizardSpockImpl(player, opponent);
+        System.out.println("game session successfully created! " + player.getPlayerName() + " vs " + opponent.getPlayerName());
+    }
+
+    private void doConnect(String[] parameters) throws IOException, InterruptedException {
+        int port = Integer.parseInt(parameters[0]);
+        this.tcpStream = new TCPStream(port, false, this.player.getPlayerName());
+        tcpStream.start();
+        this.handshake();
+    }
+
+    private boolean checkConnection() {
+        if (this.tcpStream == null)
+            return false;
+        if (!this.tcpStream.checkConnected())
+            return false;
+        return true;
     }
 
     private void doScore() {
-        // TODO: 25.05.2022
-        /*
-            correct status handling, it means, we must check, that second player exist right now
-            and we can print his name and score.
-         */
-        this.gameEngine.printScore(outStream);
+        if (this.checkConnection())
+            this.gameEngine.printScore(outStream);
+        else {
+            System.out.println("no connection to the opponent");
+        }
 
     }
 
