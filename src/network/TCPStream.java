@@ -18,8 +18,8 @@ public class TCPStream extends Thread {
     private Thread createThread = null;
     private TCPServer tcpServer = null;
     private TCPClient tcpClient = null;
-    private long waitInMillis = WAIT_LOOP_IN_MILLIS;
-    private String remoteEngine = "localhost";
+    private final long waitInMillis = WAIT_LOOP_IN_MILLIS;
+    private final String remoteEngine = "localhost";
 
     public TCPStream(int port, boolean asServer, String name) {
         this.port = port;
@@ -109,10 +109,7 @@ public class TCPStream extends Thread {
     }
 
     public boolean checkConnected() {
-        if (this.socket == null) {
-            return false;
-        }
-        return true;
+        return this.socket != null;
     }
 
     public InputStream getInputStream() throws IOException {
@@ -125,9 +122,6 @@ public class TCPStream extends Thread {
         return this.socket.getOutputStream();
     }
 
-    public void setRemoteEngine(String remoteEngine) {
-        this.remoteEngine = remoteEngine;
-    }
 
     private class TCPServer {
         private ServerSocket srvSocket = null;
@@ -146,7 +140,7 @@ public class TCPStream extends Thread {
             b.append("opened port ");
             b.append(port);
             b.append(" on localhost and wait");
-            System.out.println(b.toString());
+            System.out.println(b);
             //>>>>>>>>>>>>>>>>>>>debug
 
             Socket socket = this.srvSocket.accept();
@@ -157,7 +151,7 @@ public class TCPStream extends Thread {
             b.append(name);
             b.append("): ");
             b.append("connected");
-            System.out.println(b.toString());
+            System.out.println(b);
             //>>>>>>>>>>>>>>>>>>>debug
 
             return socket;
@@ -186,10 +180,9 @@ public class TCPStream extends Thread {
                     b.append("): ");
                     b.append("try to connect localhost port ");
                     b.append(port);
-                    System.out.println(b.toString());
+                    System.out.println(b);
                     //>>>>>>>>>>>>>>>>>>>debug
-                    Socket socket = new Socket(TCPStream.this.remoteEngine, port);
-                    return socket;
+                    return new Socket(TCPStream.this.remoteEngine, port);
                 } catch (IOException ioe) {
                     //<<<<<<<<<<<<<<<<<<debug
                     StringBuilder b = new StringBuilder();
@@ -199,7 +192,7 @@ public class TCPStream extends Thread {
                     b.append("): ");
                     b.append("failed / wait and re-try");
                     b.append(port);
-                    System.out.println(b.toString());
+                    System.out.println(b);
                     try {
                         Thread.sleep(waitInMillis);
                     } catch (InterruptedException ex) {
